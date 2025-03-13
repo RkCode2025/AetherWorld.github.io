@@ -31,15 +31,22 @@ export default function ReverseCancelAI() {
         body: JSON.stringify({ topic, style, wordCount }),
       });
 
+      if (!res.ok) {
+        throw new Error("Failed to fetch from server.");
+      }
+
       const data = await res.json();
 
-      if (res.ok && data.defense) {
+      if (data.defense) {
         setResponse(data.defense);
       } else {
         setError(data.error || "❌ Failed to generate a defense.");
       }
     } catch (err) {
-      setError("❌ Server error. Please try again later.");
+      // Check if the error is coming from the server fetch or from the server side
+      const errorMessage =
+        err instanceof Error ? err.message : "❌ Server error. Please try again later.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

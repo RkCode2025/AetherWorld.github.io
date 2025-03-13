@@ -4,10 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 
 export default function ExcuseOMatic() {
-  const [situation, setSituation] = useState("");
-  const [excuse, setExcuse] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [situation, setSituation] = useState<string>("");
+  const [excuse, setExcuse] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const handleGenerateExcuse = async () => {
     if (!situation.trim()) {
@@ -26,6 +26,10 @@ export default function ExcuseOMatic() {
         body: JSON.stringify({ situation }),
       });
 
+      if (!response.ok) {
+        throw new Error("❌ Failed to generate an excuse.");
+      }
+
       const data = await response.json();
 
       if (data.excuse) {
@@ -33,8 +37,12 @@ export default function ExcuseOMatic() {
       } else {
         setError("❌ Failed to generate an excuse.");
       }
-    } catch (err) {
-      setError("❌ Server error. Please try again later.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError("❌ Server error. Please try again later.");
+      } else {
+        setError("❌ Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
