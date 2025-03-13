@@ -34,7 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/components/BackgroundAnimation.tsx"
-, "app/CustomTimeline.js"  ],
+, "app/CustomTimeline.js", "next.config.js"  ],
   "exclude": [
     "node_modules"
   ]
